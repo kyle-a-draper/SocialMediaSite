@@ -14,6 +14,8 @@ if (isset($_SESSION['id']) && isset($_SESSION['username'])) {
 
     $i = 0;
     require('topNav.php');
+    require('chatIcon.php');
+
     echo "<!DOCTYPE html>
     <html>
     <head>

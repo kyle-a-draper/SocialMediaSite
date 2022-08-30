@@ -9,7 +9,16 @@ if (isset($_SESSION['id']) && isset($_SESSION['username'])) {
     $followersString = file_get_contents("users/".$id."/following.txt");
     $followersArr = explode(',', $followersString);
     $i = 0;
-    echo "<table>";
+    echo "<!DOCTYPE html>
+    <html>
+    <head>
+    <title>HOME</title>
+    <link rel=\"stylesheet\" href=\"styles.css\">
+    </head>
+    <body>
+";
+require('topNav.php');
+    echo "<div style=\"margin-top: 4%;><table style=\"border-top: 5%;>";
     while($i < count($followersArr)){
     $safe_value = mysqli_real_escape_string($con, $followersArr[$i]);
 
@@ -22,7 +31,11 @@ if (isset($_SESSION['id']) && isset($_SESSION['username'])) {
     }
          $i++;
     }
-    echo "</table>";
+    if($i === 0){
+        echo"<p style=\"margin-top: 3%;\">This user is not following anyone</p>";
+    }
+    echo "</table></div></body>";
+    echo "</html>";
 
 }else{
 

@@ -9,36 +9,36 @@ if (isset($_SESSION['id']) && isset($_SESSION['username'])) {
     
     $id = $_SESSION['id'];
 
+    $string = "";
 
-    $file = fopen("users/$id/following.txt", "r");
-    $string = fread($file,filesize("users/$id/following.txt"));
-    fclose($file);
-    $count = 0;
-    $str_arr = [strlen($string)];
+    $string2 = "";
+
+
+    $sql1 = "SELECT followingID FROM follows WHERE followerID = '$id'";
+    $selectresult1 = $con->query($sql1);
+    while($results = mysqli_fetch_assoc($selectresult1)){
+        $string .= "'";
+        $string .= $results["followingID"];
+        $string .= "'";
+        $string .= ",";
+
+
+    }
     
-    for($x=0;$x<strlen($string);$x++){
-        if($string[$x] !== ','){
-            $str_arr[$count] = $string[$x];
-            $count++;
-        }
+    for($i = 0; $i < strlen($string)-1; $i++){
+        $string2[$i] = $string[$i];
     }
-    $string = "'";
-    for($x=0;$x<$count;$x++){
-        $string .= $str_arr[$x];
-        if($x<$count-1){
-            $string .= "','";
-        }
-    }
-    $string .= "'";
 
     
 
 
-    $sql = "SELECT id, userID, mediaPath, postText, timePosted FROM posts WHERE userID IN ($string) OR userID = '$id' ORDER BY timePosted DESC";
+    $sql = "SELECT id, userID, mediaPath, postText, timePosted FROM posts WHERE userID IN ($string2) OR userID = '$id' ORDER BY timePosted DESC";
     $selectresult = $con->query($sql);
 
+    echo "<img src=\"messangeicon.png\" onclick=\"openChat(".$id.")\"  style=\"position: fixed; right: 2%; bottom: 2%; width:3%;aspect-ratio : 1 / 1;\">";
 
-    echo"<div style=\"width: 30%; margin-top: 5%; margin-left: auto; margin-right: auto;\">";
+
+    echo"<div id=\"chatcontainer\"></div><div style=\"width: 30%; margin-top: 5%; margin-left: auto; margin-right: auto;\">";
     while($posts = mysqli_fetch_assoc($selectresult)){
         $userID = $posts["userID"];
         $sql2 = "SELECT username FROM accounts WHERE id = $userID";
@@ -74,7 +74,7 @@ if (isset($_SESSION['id']) && isset($_SESSION['username'])) {
 
 
     echo"
-        <div style=\"background-color: lightgray;\">
+        <div style=\"background-color: lightgray; padding: 2%;\">
             <a href=\"user.php?id=$userID\" class=\"postsUsernameDisplay\">$username</a>
             <img src=\"$path\"  style=\"width:100%;aspect-ratio : 1 / 1;\">
             <div style=\"width: 80%; display: inline-block;\">
@@ -112,6 +112,27 @@ if (isset($_SESSION['id']) && isset($_SESSION['username'])) {
         </script>
     
     ";
+    echo "
+    <script>
+    function openChat(userID) {
+        var element = document.getElementById(\"chatcontainer\");
+        element.style.visibility = \"visible\";
+        console.log(\"visible\");
+        visible = true;
+        $.ajax({    
+            type: \"POST\",
+            url: \"messagesPopup.php\",       
+            data: { userID: userID},      
+            dataType: \"html\",   //expect html to be returned                
+            success: function(response){                    
+                $(\"#chatcontainer\").html(response); 
+                //alert(response);
+            }
+    
+        });
+    };
+        </script>
+        ";
 
 
 }else{

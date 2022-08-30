@@ -50,8 +50,8 @@ if (isset($_SESSION['id']) && isset($_SESSION['username'])) {
      </div>";
 
     echo "
-    <div style=\"display: flex;
-    justify-content:space-between;\">";
+    <div style=\display: flex;
+    flex-wrap: wrap;\">";
 
     while($posts = mysqli_fetch_assoc($selectresult)){
         $path = $posts["mediaPath"];

@@ -7,6 +7,8 @@ if (isset($_SESSION['id']) && isset($_SESSION['username'])) {
 
     require('topNav.php');
 
+    require('chatIcon.php');
+
     $id = $_SESSION['id'];
     $sql = "SELECT id, mediaPath FROM posts WHERE userID = $id ORDER BY timePosted DESC";
     $selectresult = $con->query($sql);
@@ -34,7 +36,10 @@ if (isset($_SESSION['id']) && isset($_SESSION['username'])) {
      <a href=\"followers.php\">Followers</a>
 
      <a href=\"following.php\">Following</a>
-     </div>";
+     <br>
+     <a href=\"settings.php\">Settings</a>
+
+    </div>";
 
     echo "
     <form action=\"upload.php\" method=\"post\" enctype=\"multipart/form-data\">
@@ -42,8 +47,8 @@ if (isset($_SESSION['id']) && isset($_SESSION['username'])) {
     <input type=\"file\" name=\"fileToUpload\" id=\"fileToUpload\">
     <input type=\"submit\" value=\"Upload Image\" name=\"submit\">
     </form>
-    <div style=\"display: flex;
-    justify-content:space-between;\">";
+    <div style=\display: flex;
+    flex-wrap: wrap;\">";
 
     while($posts = mysqli_fetch_assoc($selectresult)){
         $path = $posts["mediaPath"];

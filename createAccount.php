@@ -8,6 +8,10 @@
         <?php
     require('connection.php');
     if (isset($_REQUEST['username'])) {
+        $fname = stripslashes($_REQUEST['fname']);
+        $fname = mysqli_real_escape_string($con, $fname);
+        $lname = stripslashes($_REQUEST['lname']);
+        $lname = mysqli_real_escape_string($con, $lname);
         $username = stripslashes($_REQUEST['username']);
         $username = mysqli_real_escape_string($con, $username);
         $email    = stripslashes($_REQUEST['email']);
@@ -16,8 +20,8 @@
         $password = mysqli_real_escape_string($con, $password);
         $hashedpword = password_hash($password, PASSWORD_DEFAULT);
         $create_datetime = date("Y-m-d H:i:s");
-        $query    = "INSERT into `accounts` (username, password, email, create_datetime)
-                     VALUES ('$username', '$hashedpword', '$email', '$create_datetime')";
+        $query    = "INSERT into `accounts` (username, password, email, create_datetime, fname, lname, private)
+                     VALUES ('$username', '$hashedpword', '$email', '$create_datetime', '$fname', '$lname', 0)";
         $result   = mysqli_query($con, $query);
         if ($result) {
             $sql = "SELECT id FROM accounts WHERE username = '$username'";
@@ -46,6 +50,12 @@
 
         <div class="login">
         <form action="" method="post">
+
+            <label for="email">First Name</label>
+            <input class="loginInput" type="text" id="fname" name="fname" placeholder="First Name">
+           
+            <label for="email">Last Name</label>
+            <input class="loginInput" type="text" id="lname" name="lname" placeholder="Last Name">
 
             <label for="email">Email</label>
             <input class="loginInput" type="text" id="email" name="email" placeholder="Email">
